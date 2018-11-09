@@ -15,7 +15,7 @@
 #
 # Original author: World Class Project www.worldclassproject.org.uk
 
-import gtk
+from gi.repository import Gtk
 
 
 from gettext import gettext as _
@@ -31,7 +31,7 @@ class GameWelcomeScreen():
         
       
               
-        self.xml=gtk.Builder();        
+        self.xml=Gtk.Builder();        
                 
         ##init the background image buffer
     
@@ -41,7 +41,7 @@ class GameWelcomeScreen():
         
         # Get Window
         self.w = self.xml.get_object('window1')
-        #self.w.connect("delete_event", gtk.main_quit)
+        #self.w.connect("delete_event", Gtk.main_quit)
         
         # Get Windows child
         self.w_child = self.w.get_child()
@@ -93,12 +93,12 @@ class GameWelcomeScreen():
        
         #load the approved list of languages
 
-        store=gtk.ListStore(str)
+        store=Gtk.ListStore(str)
        
         self.populate_approved_languages(store);
        
         self.combo.set_model(store)
-        cell = gtk.CellRendererText()
+        cell = Gtk.CellRendererText()
         self.combo.pack_start(cell, True)
         self.combo.add_attribute(cell, 'text',0)
         self.combo.connect('changed', self.changed_cb)    
@@ -117,10 +117,10 @@ class GameWelcomeScreen():
             index = widget.get_active()
            
             if(self.controller.load_language_by_user_selection(model[index][0])):
-                 dialog = gtk.MessageDialog(parent=None,
-                                       buttons=gtk.BUTTONS_OK,
-                                       flags=gtk.DIALOG_DESTROY_WITH_PARENT,
-                                       type=gtk.MESSAGE_QUESTION,
+                 dialog = Gtk.MessageDialog(parent=None,
+                                       buttons=Gtk.ButtonsType.OK,
+                                       flags=Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                       type=Gtk.MessageType.QUESTION,
                                        message_format="Language Loaded Successfully!");
                  dialog.set_title("Language Loaded!");
                  result = dialog.run()
@@ -132,10 +132,10 @@ class GameWelcomeScreen():
                 
             
         except IOError :# as err:
-            dialog = gtk.MessageDialog(parent=None,
-                                       buttons=gtk.BUTTONS_OK,
-                                       flags=gtk.DIALOG_DESTROY_WITH_PARENT,
-                                       type=gtk.MESSAGE_QUESTION,
+            dialog = Gtk.MessageDialog(parent=None,
+                                       buttons=Gtk.ButtonsType.OK,
+                                       flags=Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                       type=Gtk.MessageType.QUESTION,
                                        message_format='ERROR: Failed to load language: '+model[index][0]);
             dialog.set_title("Language Error");
             result = dialog.run()

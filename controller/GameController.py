@@ -246,7 +246,7 @@ class GlobalGameController:
 		
 		
 		
-		#self.bgpixbuf = gtk.gdk.pixbuf_new_from_file(indexString) 
+		#self.bgpixbuf = GdkPixbuf.Pixbuf.new_from_file(indexString) 
 		
 		
 if __name__ == '__main__':

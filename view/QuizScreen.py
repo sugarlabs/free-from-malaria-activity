@@ -14,8 +14,7 @@
 #along with FreeFromMalaria.  If not, see <http://www.gnu.org/licenses/>. 
 #
 # Original author: World Class Project www.worldclassproject.org.uk
-import gtk
-#import gtk.glade
+from gi.repository import Gtk
 import random;
 
 from gettext import gettext as _
@@ -31,7 +30,7 @@ class GameQuizScreen():
         ##get the contoller  
         self.controller=cont
               
-        self.xml=gtk.Builder();        
+        self.xml=Gtk.Builder();        
                 
         ##init the background image buffer
     
@@ -41,7 +40,7 @@ class GameQuizScreen():
         
         # Get Window
         self.w = self.xml.get_object('window1')
-        #self.w.connect("delete_event", gtk.main_quit)
+        #self.w.connect("delete_event", Gtk.main_quit)
         
         # Get Windows child
         self.w_child = self.w.get_child()

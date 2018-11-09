@@ -16,7 +16,9 @@
 # Original author: World Class Project www.worldclassproject.org.uk
 
 from gettext import gettext as _
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
 
 
 import controller.GameController
@@ -38,8 +40,9 @@ except (ImportError, AttributeError):
 
 
 # Load sugar libraries
-from sugar.activity import activity  
-from sugar.graphics.toolbutton import ToolButton
+from sugar3.activity import activity
+from sugar3.graphics.toolbarbox import ToolbarBox
+from sugar3.graphics.toolbutton import ToolButton
 
 
 class FreeFromMalariaActivity(activity.Activity):
@@ -75,8 +78,8 @@ class FreeFromMalariaActivity(activity.Activity):
 
 		# Attach sugar toolbox (Share, ...)
 		 # Use old <= 0.84 toolbar design
-		toolbox = activity.ActivityToolbox(self)
-		view_tool_bar = toolbox.get_activity_toolbar();#gtk.Toolbar()
+		toolbox = ToolbarBox()
+		view_tool_bar = toolbox.get_toolbar();
 
 		#for debug only
 #		self.previous_chapter = ToolButton('gtk-media-forward-rtl')
@@ -134,10 +137,10 @@ class FreeFromMalariaActivity(activity.Activity):
 		
 		view_tool_bar.show()
 	   # toolbox.add_toolbar('Game Control', view_tool_bar)
-		self.set_toolbox(toolbox)
+		self.set_toolbar_box(toolbox)
 		toolbox.show()
-		activity_toolbar = toolbox.get_activity_toolbar()
-		activity_toolbar.share.props.visible = False
+		activity_toolbar = toolbox.get_toolbar()
+		self.max_participants = 1
 		
 		#global game state
 	   
@@ -173,7 +176,7 @@ class FreeFromMalariaActivity(activity.Activity):
 		result = dialog.run()
 		dialog.destroy()
 
-		if result == gtk.RESPONSE_YES:
+		if result == Gtk.ResponseType.YES:
 		   self.controller.reload();
 	def home_clicked(self, event):
 	  restartTitle = _("Restart The Main Menu?");
@@ -183,39 +186,39 @@ class FreeFromMalariaActivity(activity.Activity):
 	  result = dialog.run()
 	  dialog.destroy()
 
-	  if result == gtk.RESPONSE_YES:
+	  if result == Gtk.ResponseType.YES:
 		self.controller.play_game("Welcome", None);
 	def sound_clicked(self, event):
 	  if(self.controller.get_sound() == True):
-	  	self.sound.set_icon("audio-volume-muted")
+	  	self.sound.set_icon_name("audio-volume-muted")
 		self.controller.set_sound(False);
 	  else:
 		self.controller.set_sound(True);
-		self.sound.set_icon("audio-volume-high")  
+		self.sound.set_icon_name("audio-volume-high")
 
 	
 	  
 	def create_dialog(self, title, message):
-		dialog = gtk.MessageDialog(parent=None,
+		dialog = Gtk.MessageDialog(parent=None,
 
-		buttons=gtk.BUTTONS_YES_NO,
+		buttons=Gtk.ButtonsType.YES_NO,
 
-		flags=gtk.DIALOG_DESTROY_WITH_PARENT,
+		flags=Gtk.DialogFlags.DESTROY_WITH_PARENT,
 
-		type=gtk.MESSAGE_QUESTION,
+		type=Gtk.MessageType.QUESTION,
 	  
 		message_format=message);
 		dialog.set_title(title)
 		return dialog;
 	
 	def create_dialog_ok(self, title, message):
-		dialog = gtk.MessageDialog(parent=None,
+		dialog = Gtk.MessageDialog(parent=None,
 
-		buttons=gtk.BUTTONS_OK,
+		buttons=Gtk.ButtonsType.OK,
 
-		flags=gtk.DIALOG_DESTROY_WITH_PARENT,
+		flags=Gtk.DialogFlags.DESTROY_WITH_PARENT,
 
-		type=gtk.MESSAGE_QUESTION,
+		type=Gtk.MessageType.QUESTION,
 	  
 		message_format=message);
 		dialog.set_title(title)
@@ -239,7 +242,7 @@ class FreeFromMalariaActivity(activity.Activity):
 		
 		self.w_child = self.mywindow.get_child()
 		 
-		self.widget = self.w_child
+		self.activity_widget = self.w_child
 		 
 		
 #		if(self.widget==None or self.w_child==None):
@@ -248,7 +251,7 @@ class FreeFromMalariaActivity(activity.Activity):
 		
 	def pack_and_show(self):
 		# Create the main container
-		self._main_view = gtk.VBox()
+		self._main_view = Gtk.VBox()
 
 		# Import our class gtktest():
 
@@ -256,14 +259,14 @@ class FreeFromMalariaActivity(activity.Activity):
 		#self.gtktest = devtest2(self)
 
 		# Step 2: Remove the widget's parent
-		if self.widget.parent:
-			self.widget.parent.remove(self.widget)
+		if self.activity_widget.get_parent():
+			self.activity_widget.get_parent().remove(self.activity_widget)
  
 		# Step 3: We attach that widget to our window
-		self._main_view.pack_start(self.widget)
+		self._main_view.pack_start(self.activity_widget, True, True, 0)
 
 		# Display everything
-		self.widget.show()
+		self.activity_widget.show()
 		self._main_view.show()
 		self.set_canvas(self._main_view)
 		self.show_all()
